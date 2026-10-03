@@ -1,0 +1,158 @@
+---
+import { historia, diferenciais } from "../data/conteudo";
+---
+
+<section class="secao" id="sobre">
+  <div class="container">
+    <div class="sobre__cabecalho revelar">
+      <span class="secao__rotulo">O projeto</span>
+      <h2 class="secao__titulo">{historia.titulo}</h2>
+    </div>
+
+    <div class="sobre__grade">
+      <div class="sobre__texto revelar revelar--1">
+        {historia.paragrafos.map((p) => <p>{p}</p>)}
+      </div>
+
+      <aside class="sobre__destaque revelar revelar--2">
+        <svg
+          class="sobre__aspas"
+          viewBox="0 0 32 32"
+          aria-hidden="true"
+          fill="currentColor"
+        >
+          <path
+            d="M13 8v7c0 5-3.6 8.4-8 9v-3.2c2.4-.6 4-2.4 4.2-4.8H6V8h7zm13 0v7c0 5-3.6 8.4-8 9v-3.2c2.4-.6 4-2.4 4.2-4.8H19V8h7z"
+          ></path>
+        </svg>
+        <p>{historia.chamadaApoio}</p>
+        <a href="#apoiar" class="sobre__link">
+          Como apoiar
+          <span aria-hidden="true">→</span>
+        </a>
+      </aside>
+    </div>
+
+    <ul class="sobre__diferenciais">
+      {
+        diferenciais.map((item, i) => (
+          <li class={`sobre__item revelar revelar--${(i % 4) + 1}`}>
+            <h3>{item.titulo}</h3>
+            <p>{item.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .sobre__cabecalho {
+    max-width: 48ch;
+    margin-bottom: var(--e-5);
+  }
+
+  .sobre__grade {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--e-5);
+    align-items: start;
+    margin-bottom: var(--e-6);
+  }
+
+  .sobre__texto p {
+    color: var(--texto-suave);
+    margin-bottom: var(--e-2);
+    max-width: 62ch;
+  }
+
+  .sobre__texto p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sobre__destaque {
+    position: relative;
+    background: var(--azul-marinho);
+    border-left: 3px solid var(--destaque);
+    border-radius: var(--r-medio);
+    padding: var(--e-4) var(--e-3);
+  }
+
+  .sobre__aspas {
+    width: 28px;
+    height: 28px;
+    color: var(--destaque);
+    opacity: 0.55;
+    margin-bottom: var(--e-2);
+  }
+
+  .sobre__destaque p {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.55;
+    margin-bottom: var(--e-3);
+  }
+
+  .sobre__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--destaque);
+  }
+
+  .sobre__link span {
+    transition: transform var(--d-rapida) var(--e-suave);
+  }
+
+  @media (hover: hover) {
+    .sobre__link:hover span {
+      transform: translateX(4px);
+    }
+  }
+
+  .sobre__diferenciais {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--e-3);
+    list-style: none;
+  }
+
+  .sobre__item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-medio);
+    padding: var(--e-3);
+    transition:
+      transform var(--d-media) var(--e-suave),
+      border-color var(--d-media) var(--e-suave),
+      background-color var(--d-media) var(--e-suave);
+  }
+
+  @media (hover: hover) {
+    .sobre__item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(222, 178, 53, 0.4);
+      background: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  .sobre__item h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    color: var(--destaque);
+  }
+
+  .sobre__item p {
+    font-size: 0.95rem;
+    color: var(--texto-suave);
+  }
+
+  @media (max-width: 860px) {
+    .sobre__grade {
+      grid-template-columns: 1fr;
+      gap: var(--e-4);
+    }
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import { apoio, linkWhatsApp } from "../data/conteudo";
+
+const mensagemApoio =
+  "Olá! Vi o site da Escolinha Top Vôlei e quero apoiar o projeto.";
+---
+
+<section class="secao secao--clara" id="apoiar">
+  <div class="container">
+    <div class="apoiar__cabecalho revelar">
+      <span class="secao__rotulo">Apoiadores</span>
+      <h2 class="secao__titulo">{apoio.titulo}</h2>
+      <p class="secao__texto">{apoio.texto}</p>
+    </div>
+
+    <ul class="apoiar__formas">
+      {
+        apoio.formas.map((forma, i) => (
+          <li class={`forma revelar revelar--${(i % 4) + 1}`}>
+            <h3 class="forma__titulo">{forma.titulo}</h3>
+            <p class="forma__texto">{forma.texto}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="apoiar__chamada revelar">
+      <div>
+        <h3>Quer conversar sobre patrocínio?</h3>
+        <p>
+          Fale direto com a coordenação. Montamos uma proposta conforme o que
+          sua empresa puder oferecer.
+        </p>
+      </div>
+      <a
+        href={linkWhatsApp(mensagemApoio)}
+        class="botao botao--claro"
+        target="_blank"
+        rel="noopener"
+      >
+        Quero apoiar
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .apoiar__cabecalho {
+    max-width: 56ch;
+    margin-bottom: var(--e-5);
+  }
+
+  .apoiar__formas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: var(--e-3);
+    list-style: none;
+    margin-bottom: var(--e-5);
+  }
+
+  .forma {
+    background: var(--branco);
+    border: 1px solid rgba(10, 26, 58, 0.1);
+    border-left: 3px solid var(--azul-vivo);
+    border-radius: var(--r-medio);
+    padding: var(--e-3);
+    box-shadow: var(--sombra-1);
+    transition:
+      transform var(--d-media) var(--e-suave),
+      box-shadow var(--d-media) var(--e-suave);
+  }
+
+  @media (hover: hover) {
+    .forma:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(10, 26, 58, 0.14);
+    }
+  }
+
+  .forma__titulo {
+    font-size: 1.05rem;
+    color: var(--azul-marinho);
+    margin-bottom: 0.5rem;
+  }
+
+  .forma__texto {
+    font-size: 0.95rem;
+    color: #43506b;
+  }
+
+  .apoiar__chamada {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-3);
+    background: var(--azul-marinho);
+    color: var(--branco);
+    border-radius: var(--r-grande);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .apoiar__chamada h3 {
+    font-size: var(--t-subtitulo);
+    margin-bottom: 0.4rem;
+  }
+
+  .apoiar__chamada p {
+    color: var(--texto-suave);
+    font-size: 0.95rem;
+    max-width: 48ch;
+  }
+
+  .apoiar__chamada .botao--claro {
+    background: var(--destaque);
+    color: var(--texto-escuro);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 620px) {
+    .apoiar__chamada .botao {
+      width: 100%;
+    }
+  }
+</style>

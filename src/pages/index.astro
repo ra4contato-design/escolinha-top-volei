@@ -1,0 +1,34 @@
+---
+/* ============================================================================
+   PÁGINA INICIAL
+   Monta o site juntando os componentes, na ordem em que aparecem na tela.
+   Para reordenar as seções, basta trocar a ordem das linhas abaixo.
+   ============================================================================ */
+
+import Base from "../layouts/Base.astro";
+import Cabecalho from "../components/Cabecalho.astro";
+import Banner from "../components/Banner.astro";
+import Torneio from "../components/Torneio.astro";
+import Sobre from "../components/Sobre.astro";
+import Participar from "../components/Participar.astro";
+import Apoiar from "../components/Apoiar.astro";
+import Duvidas from "../components/Duvidas.astro";
+import Local from "../components/Local.astro";
+import Rodape from "../components/Rodape.astro";
+import BotaoWhatsApp from "../components/BotaoWhatsApp.astro";
+---
+
+<Base>
+  <Cabecalho />
+  <main id="conteudo">
+    <Banner />
+    <Torneio />
+    <Sobre />
+    <Participar />
+    <Apoiar />
+    <Duvidas />
+    <Local />
+  </main>
+  <Rodape />
+  <BotaoWhatsApp />
+</Base>

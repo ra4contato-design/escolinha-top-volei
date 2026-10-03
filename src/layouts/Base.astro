@@ -1,0 +1,119 @@
+---
+/* ============================================================================
+   LAYOUT BASE
+   ----------------------------------------------------------------------------
+   É o "esqueleto" de toda página: o que fica dentro de <head>, as fontes,
+   os estilos globais e a estrutura do HTML.
+
+   Tudo que estiver entre os três traços (---) roda ANTES da página ser
+   montada, no computador que faz o build. Não vai para o navegador.
+   ============================================================================ */
+
+import { projeto, local, contato, aulas } from "../data/conteudo";
+import "../styles/global.css";
+
+interface Props {
+  titulo?: string;
+  descricao?: string;
+}
+
+const {
+  titulo = `${projeto.nome} — Vôlei de areia gratuito em João Pessoa`,
+  descricao = projeto.descricaoSeo,
+} = Astro.props;
+
+/* Dados estruturados: é assim que o Google entende que isto é uma
+   organização esportiva, com endereço e horário. Ajuda a aparecer nas buscas
+   locais do tipo "vôlei para crianças João Pessoa". */
+const dadosEstruturados = {
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  name: projeto.nome,
+  alternateName: projeto.assinatura,
+  description: projeto.descricaoSeo,
+  url: projeto.site,
+  telephone: `+${contato.whatsappNumero}`,
+  email: contato.email,
+  isAccessibleForFree: true,
+  sport: "Vôlei de praia",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: local.nome,
+    addressLocality: local.cidade,
+    addressRegion: local.estado,
+    postalCode: local.cep,
+    addressCountry: "BR",
+  },
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "15:00",
+      closes: "17:00",
+    },
+  ],
+  sameAs: [contato.instagramUrl],
+  audience: {
+    "@type": "PeopleAudience",
+    suggestedMinAge: aulas.idadeMinima,
+    suggestedMaxAge: aulas.idadeMaxima,
+  },
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <meta name="theme-color" content="#00081b" />
+    <link rel="canonical" href={projeto.site} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Como o site aparece ao ser compartilhado no WhatsApp, Instagram e Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={projeto.nome} />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={projeto.site} />
+    <meta property="og:image" content={`${projeto.site}/og.jpg`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fontes: preconnect acelera o carregamento abrindo a conexão antes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap"
+    />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(dadosEstruturados)}
+    />
+  </head>
+
+  <body>
+    <!-- Link invisível que aparece ao apertar Tab: deixa quem usa teclado
+         pular o menu e ir direto ao conteúdo -->
+    <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+    <slot />
+
+    <script>
+      // Liga os comportamentos da página depois que o HTML existe
+      import {
+        iniciarAnimacoes,
+        iniciarCabecalho,
+        iniciarMenu,
+      } from "../scripts/animacoes";
+
+      iniciarAnimacoes();
+      iniciarCabecalho();
+      iniciarMenu();
+    </script>
+  </body>
+</html>

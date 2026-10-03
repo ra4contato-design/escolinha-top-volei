@@ -1,0 +1,184 @@
+---
+import { local, aulas, contato, linkWhatsApp } from "../data/conteudo";
+---
+
+<section class="secao secao--marinho" id="local">
+  <div class="container">
+    <div class="local__cabecalho revelar">
+      <span class="secao__rotulo">Onde fica</span>
+      <h2 class="secao__titulo">{local.nome}</h2>
+      <p class="secao__texto">
+        {local.bairro}, {local.cidade}/{local.estado} — CEP {local.cep}
+      </p>
+    </div>
+
+    <div class="local__grade">
+      <!-- O mapa fica sobre um skeleton. Enquanto o iframe não carrega, o
+           usuário vê o bloco pulsando em vez de um buraco branco. O espaço
+           já está reservado, então nada "pula" quando o mapa aparece. -->
+      <div class="mapa revelar">
+        <div class="skeleton mapa__skeleton" aria-hidden="true"></div>
+        <iframe
+          class="mapa__quadro"
+          src={local.mapaUrl}
+          title={`Mapa da ${local.nome}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+
+      <div class="local__dados revelar revelar--1">
+        <dl class="dados">
+          <div class="dados__item">
+            <dt>Endereço</dt>
+            <dd>{local.enderecoCompleto}</dd>
+          </div>
+          <div class="dados__item">
+            <dt>Dias</dt>
+            <dd>{aulas.dias}</dd>
+          </div>
+          <div class="dados__item">
+            <dt>Horário</dt>
+            <dd>{aulas.horario}</dd>
+          </div>
+          <div class="dados__item">
+            <dt>Idades</dt>
+            <dd>{aulas.idadeMinima} a {aulas.idadeMaxima} anos</dd>
+          </div>
+          <div class="dados__item">
+            <dt>Valor</dt>
+            <dd class="dados__gratuito">{aulas.valor}</dd>
+          </div>
+        </dl>
+
+        <div class="local__acoes">
+          <a
+            href={local.mapaLink}
+            class="botao botao--secundario"
+            target="_blank"
+            rel="noopener"
+          >
+            Abrir no Google Maps
+          </a>
+          <a
+            href={linkWhatsApp()}
+            class="botao botao--principal"
+            target="_blank"
+            rel="noopener"
+          >
+            Falar no WhatsApp
+          </a>
+        </div>
+
+        <p class="local__nota">
+          Dúvida sobre o horário do fim de semana? Confirme no
+          <a href={contato.grupoComunidade} target="_blank" rel="noopener">
+            grupo da comunidade</a
+          >.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .local__cabecalho {
+    max-width: 52ch;
+    margin-bottom: var(--e-4);
+  }
+
+  .local__grade {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--e-4);
+    align-items: stretch;
+  }
+
+  .mapa {
+    position: relative;
+    border-radius: var(--r-grande);
+    overflow: hidden;
+    border: 1px solid var(--borda);
+    min-height: 380px;
+  }
+
+  .mapa__skeleton {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+  }
+
+  .mapa__quadro {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    border: 0;
+    /* Reduz o brilho do mapa para combinar com o fundo escuro */
+    filter: grayscale(0.25) contrast(1.05);
+  }
+
+  .local__dados {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(0, 8, 27, 0.45);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-grande);
+    padding: var(--e-4) var(--e-3);
+  }
+
+  .dados {
+    display: grid;
+    gap: var(--e-2);
+    margin-bottom: var(--e-3);
+  }
+
+  .dados__item dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+  }
+
+  .dados__item dd {
+    font-weight: 600;
+    margin-top: 0.15rem;
+  }
+
+  .dados__gratuito {
+    color: var(--destaque);
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+
+  .local__acoes {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .local__nota {
+    margin-top: var(--e-3);
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+  }
+
+  .local__nota a {
+    color: var(--destaque);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 880px) {
+    .local__grade {
+      grid-template-columns: 1fr;
+    }
+
+    .mapa,
+    .mapa__quadro {
+      min-height: 300px;
+    }
+  }
+</style>

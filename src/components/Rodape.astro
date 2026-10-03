@@ -1,0 +1,173 @@
+---
+import { projeto, contato, local } from "../data/conteudo";
+
+const ano = new Date().getFullYear();
+---
+
+<footer class="rodape">
+  <div class="container rodape__interno">
+    <div class="rodape__marca">
+      <img src={projeto.logoGrande} alt="" width="52" height="52" />
+      <div>
+        <strong>{projeto.nome}</strong>
+        <span>{projeto.assinatura}</span>
+      </div>
+    </div>
+
+    <p class="rodape__resumo">{projeto.resumo}</p>
+
+    <div class="rodape__colunas">
+      <div class="rodape__coluna">
+        <h2 class="rodape__titulo">Contato</h2>
+        <ul>
+          <li>
+            <a href={`https://wa.me/${contato.whatsappNumero}`} target="_blank" rel="noopener">
+              WhatsApp {contato.whatsappExibicao}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${contato.email}`}>{contato.email}</a>
+          </li>
+          <li>
+            <a href={contato.instagramUrl} target="_blank" rel="noopener">
+              Instagram @{contato.instagram}
+            </a>
+          </li>
+          <li>
+            <a href={contato.grupoComunidade} target="_blank" rel="noopener">
+              Grupo da comunidade
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="rodape__coluna">
+        <h2 class="rodape__titulo">Onde fica</h2>
+        <address>
+          {local.nome}<br />
+          {local.bairro}<br />
+          {local.cidade}/{local.estado}<br />
+          CEP {local.cep}
+        </address>
+      </div>
+
+      <div class="rodape__coluna">
+        <h2 class="rodape__titulo">Navegar</h2>
+        <ul>
+          <li><a href="#torneio">Copinha</a></li>
+          <li><a href="#sobre">O projeto</a></li>
+          <li><a href="#participar">Participar</a></li>
+          <li><a href="#apoiar">Apoiar</a></li>
+          <li><a href="#duvidas">Dúvidas</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="rodape__base">
+      <p>© {ano} {projeto.nome}. Projeto social sem fins lucrativos.</p>
+      <p class="rodape__imagem">
+        As imagens de crianças publicadas neste site têm autorização de uso de
+        imagem assinada pelos responsáveis legais.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    background: #000511;
+    border-top: 1px solid var(--borda);
+    padding-block: var(--e-5) var(--e-4);
+  }
+
+  .rodape__marca {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: var(--e-2);
+  }
+
+  .rodape__marca img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  .rodape__marca strong {
+    display: block;
+    font-family: var(--fonte-titulo);
+    font-size: 1.1rem;
+  }
+
+  .rodape__marca span {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--destaque);
+    font-weight: 600;
+  }
+
+  .rodape__resumo {
+    color: var(--texto-suave);
+    max-width: 50ch;
+    font-size: 0.95rem;
+    margin-bottom: var(--e-4);
+  }
+
+  .rodape__colunas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--e-4);
+    padding-bottom: var(--e-4);
+    border-bottom: 1px solid var(--borda);
+  }
+
+  .rodape__titulo {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin-bottom: var(--e-2);
+    font-family: var(--fonte-texto);
+    font-weight: 700;
+  }
+
+  .rodape__coluna ul {
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .rodape__coluna a {
+    font-size: 0.95rem;
+    color: var(--texto);
+    transition: color var(--d-rapida) var(--e-suave);
+  }
+
+  @media (hover: hover) {
+    .rodape__coluna a:hover {
+      color: var(--destaque);
+    }
+  }
+
+  .rodape__coluna address {
+    font-style: normal;
+    font-size: 0.95rem;
+    color: var(--texto-suave);
+    line-height: 1.8;
+  }
+
+  .rodape__base {
+    padding-top: var(--e-3);
+    display: grid;
+    gap: 0.5rem;
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+  }
+
+  .rodape__imagem {
+    max-width: 62ch;
+    opacity: 0.8;
+  }
+</style>
