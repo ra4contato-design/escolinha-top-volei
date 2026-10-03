@@ -17,8 +17,10 @@ export const projeto = {
     "Projeto social gratuito de vôlei de areia para crianças e adolescentes em João Pessoa.",
   descricaoSeo:
     "Escolinha Top Vôlei: aulas gratuitas de vôlei de areia para crianças e adolescentes de 6 a 16 anos na Praça Tenente Lucena, Castelo Branco, João Pessoa/PB. Esporte e educação caminhando juntos.",
-  // Endereço do site depois de publicado. Trocar quando tiver domínio próprio.
-  site: "https://escolinha-top-volei.pages.dev",
+  // Endereço do site publicado. É usado nas tags de compartilhamento: se
+  // estiver errado, a prévia no WhatsApp não carrega a imagem.
+  // Trocar quando houver domínio próprio.
+  site: "https://escolinha-top-volei.ra4contato.workers.dev",
   // Arquivos da logo, dentro da pasta "public".
   logo: "/logo-192.webp",
   logoGrande: "/logo-512.webp",
