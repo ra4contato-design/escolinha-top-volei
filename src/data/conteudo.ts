@@ -100,7 +100,7 @@ export const torneio = {
     totalPorGenero: 24,
     categorias: [
       { publico: "Meninas", dia: "17/10", ocupadas: 22 },
-      { publico: "Meninos", dia: "18/10", ocupadas: 0 },
+      { publico: "Meninos", dia: "18/10", ocupadas: 24 },
     ],
   },
 };
