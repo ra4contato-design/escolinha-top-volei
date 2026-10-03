@@ -1,0 +1,288 @@
+@import "./tokens.css";
+
+/* ============================================================
+   RESET — zera diferenças entre navegadores
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Impede que a seção fique colada no topo ao navegar pelo menu */
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-texto);
+  font-size: var(--t-corpo);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* Impede rolagem horizontal acidental no celular */
+  overflow-x: hidden;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fonte-titulo);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ============================================================
+   ACESSIBILIDADE
+   ============================================================ */
+
+/* Texto visível só para leitores de tela */
+.apenas-leitor-tela {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Link que aparece ao apertar Tab, para pular direto ao conteúdo */
+.pular-para-conteudo {
+  position: absolute;
+  top: -100px;
+  left: var(--e-2);
+  z-index: 100;
+  background: var(--destaque);
+  color: var(--texto-escuro);
+  padding: var(--e-2) var(--e-3);
+  border-radius: var(--r-pequeno);
+  font-weight: 700;
+  transition: top var(--d-rapida) var(--e-suave);
+}
+
+.pular-para-conteudo:focus {
+  top: var(--e-2);
+}
+
+/* Contorno visível ao navegar pelo teclado */
+:focus-visible {
+  outline: 3px solid var(--destaque);
+  outline-offset: 3px;
+  border-radius: var(--r-pequeno);
+}
+
+/* ============================================================
+   ESTRUTURA
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin-inline: auto;
+  /* Respiro lateral de 20px no celular (exigência do CLAUDE.md) */
+  padding-inline: clamp(1.25rem, 4vw, 2rem);
+}
+
+.secao {
+  padding-block: var(--e-secao);
+  position: relative;
+}
+
+.secao--clara {
+  background: var(--fundo-claro);
+  color: var(--texto-escuro);
+}
+
+.secao--marinho {
+  background: var(--fundo-secao);
+}
+
+.secao__rotulo {
+  display: inline-block;
+  font-size: var(--t-pequeno);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--destaque);
+  margin-bottom: var(--e-2);
+}
+
+.secao__titulo {
+  font-size: var(--t-titulo);
+  margin-bottom: var(--e-3);
+}
+
+.secao__texto {
+  max-width: 62ch;
+  color: var(--texto-suave);
+}
+
+.secao--clara .secao__texto {
+  color: #43506b;
+}
+
+.secao--clara .secao__rotulo {
+  color: var(--azul-vivo);
+}
+
+/* ============================================================
+   BOTÕES
+   ============================================================ */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-1);
+  padding: 0.9rem 1.75rem;
+  border-radius: var(--r-pilula);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  /* Alvo mínimo de toque recomendado para dedos */
+  min-height: 48px;
+  transition:
+    transform var(--d-rapida) var(--e-suave),
+    box-shadow var(--d-rapida) var(--e-suave),
+    background-color var(--d-rapida) var(--e-suave);
+}
+
+.botao--principal {
+  background: var(--destaque);
+  color: var(--texto-escuro);
+  box-shadow: var(--sombra-destaque);
+}
+
+.botao--secundario {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+}
+
+.botao--claro {
+  background: var(--azul-marinho);
+  color: var(--branco);
+}
+
+/* Só aplica o efeito em aparelhos com mouse — evita "travar" o
+   hover no celular depois do toque */
+@media (hover: hover) {
+  .botao:hover {
+    transform: translateY(-2px);
+  }
+  .botao--principal:hover {
+    box-shadow: 0 12px 34px rgba(222, 178, 53, 0.4);
+  }
+  .botao--secundario:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+}
+
+.botao:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ============================================================
+   ANIMAÇÃO DE ENTRADA
+   Elementos sobem suavemente quando entram na tela.
+   Controlada pelo arquivo src/scripts/animacoes.ts
+   ============================================================ */
+
+.revelar {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--d-lenta) var(--e-saida),
+    transform var(--d-lenta) var(--e-saida);
+  /* Avisa o navegador para preparar a animação: evita engasgo */
+  will-change: opacity, transform;
+}
+
+.revelar.visivel {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Atraso em cascata, para os itens aparecerem em sequência */
+.revelar--1 { transition-delay: 80ms; }
+.revelar--2 { transition-delay: 160ms; }
+.revelar--3 { transition-delay: 240ms; }
+.revelar--4 { transition-delay: 320ms; }
+
+/* ============================================================
+   SKELETON — bloco cinza pulsante enquanto algo carrega
+   ============================================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.14) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: pulsar 1.4s ease infinite;
+  border-radius: var(--r-pequeno);
+}
+
+@keyframes pulsar {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ============================================================
+   REDUÇÃO DE MOVIMENTO
+   Quem ativou "reduzir movimento" no sistema não recebe animação.
+   Exigência da seção 2.8 do CLAUDE.md.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* O conteúdo aparece direto, sem deslizar */
+  .revelar {
+    opacity: 1;
+    transform: none;
+  }
+}

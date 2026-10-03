@@ -1,0 +1,39 @@
+{
+  "name": "escolinha-top-volei",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "type-check": "astro check",
+    "lint": "biome check .",
+    "lint:corrigir": "biome check --write .",
+    "format:check": "biome format .",
+    "format": "biome format --write .",
+    "test:e2e": "playwright test",
+    "test:e2e:ver": "playwright test --ui",
+    "verificar": "npm run lint && npm run type-check && npm run build"
+  },
+  "dependencies": {
+    "astro": "^6.4.8"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "sharp": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@biomejs/biome": "^2.5.15",
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@playwright/test": "^1.63.0",
+    "typescript": "^5.9.3"
+  },
+  "description": "Site do projeto social Escolinha Top Volei",
+  "private": true
+}

@@ -1,0 +1,272 @@
+---
+import { projeto, linkWhatsApp } from "../data/conteudo";
+
+const menu = [
+  { href: "#torneio", texto: "Copinha" },
+  { href: "#sobre", texto: "O projeto" },
+  { href: "#participar", texto: "Participar" },
+  { href: "#apoiar", texto: "Apoiar" },
+  { href: "#duvidas", texto: "Dúvidas" },
+  { href: "#local", texto: "Onde fica" },
+];
+---
+
+<header class="cabecalho" data-cabecalho>
+  <div class="container cabecalho__interno">
+    <a href="#inicio" class="cabecalho__marca">
+      <img
+        src={projeto.logo}
+        alt=""
+        width="48"
+        height="48"
+        class="cabecalho__logo"
+      />
+      <span class="cabecalho__nome">
+        <strong>{projeto.nome}</strong>
+        <small>{projeto.assinatura}</small>
+      </span>
+    </a>
+
+    <nav class="cabecalho__nav" data-menu aria-label="Menu principal">
+      <ul class="cabecalho__lista">
+        {
+          menu.map((item) => (
+            <li>
+              <a href={item.href} class="cabecalho__link">
+                {item.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        href={linkWhatsApp()}
+        class="botao botao--principal cabecalho__cta"
+        target="_blank"
+        rel="noopener"
+      >
+        Quero inscrever
+      </a>
+    </nav>
+
+    <button
+      class="cabecalho__hamburguer"
+      data-menu-botao
+      aria-expanded="false"
+      aria-controls="menu-principal"
+    >
+      <span class="apenas-leitor-tela">Abrir menu</span>
+      <span class="cabecalho__barra"></span>
+      <span class="cabecalho__barra"></span>
+      <span class="cabecalho__barra"></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .cabecalho {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: var(--z-cabecalho);
+    /* Começa transparente, sobre o banner */
+    background: transparent;
+    transition:
+      background-color var(--d-media) var(--e-suave),
+      box-shadow var(--d-media) var(--e-suave),
+      backdrop-filter var(--d-media) var(--e-suave);
+  }
+
+  /* Classe adicionada pelo JavaScript quando a página sai do topo */
+  .cabecalho--rolado {
+    background: rgba(0, 8, 27, 0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--sombra-2);
+  }
+
+  .cabecalho__interno {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-3);
+    min-height: 72px;
+  }
+
+  .cabecalho__marca {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .cabecalho__logo {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    /* A logo é quadrada com fundo azul. O arredondamento disfarça a
+       borda reta e integra a imagem ao cabeçalho. */
+    border-radius: 10px;
+  }
+
+  .cabecalho__nome {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .cabecalho__nome strong {
+    font-family: var(--fonte-titulo);
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .cabecalho__nome small {
+    font-size: 0.7rem;
+    color: var(--destaque);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .cabecalho__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--e-4);
+  }
+
+  .cabecalho__lista {
+    display: flex;
+    align-items: center;
+    gap: var(--e-3);
+    list-style: none;
+  }
+
+  .cabecalho__link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--texto-suave);
+    padding-block: 0.4rem;
+    position: relative;
+    transition: color var(--d-rapida) var(--e-suave);
+  }
+
+  /* Risco dourado que cresce da esquerda no hover */
+  .cabecalho__link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--destaque);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--d-rapida) var(--e-suave);
+  }
+
+  @media (hover: hover) {
+    .cabecalho__link:hover {
+      color: var(--texto);
+    }
+    .cabecalho__link:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .cabecalho__cta {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+    min-height: 42px;
+  }
+
+  .cabecalho__hamburguer {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+  }
+
+  .cabecalho__barra {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--texto);
+    border-radius: 2px;
+    transition: transform var(--d-media) var(--e-suave),
+      opacity var(--d-rapida) var(--e-suave);
+  }
+
+  /* As três barras viram um X quando o menu abre */
+  .cabecalho__hamburguer[aria-expanded="true"] .cabecalho__barra:nth-child(2) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .cabecalho__hamburguer[aria-expanded="true"] .cabecalho__barra:nth-child(3) {
+    opacity: 0;
+  }
+  .cabecalho__hamburguer[aria-expanded="true"] .cabecalho__barra:nth-child(4) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* ---------- Celular e tablet ---------- */
+  @media (max-width: 900px) {
+    .cabecalho__hamburguer {
+      display: flex;
+    }
+
+    .cabecalho__nav {
+      position: fixed;
+      inset: 0;
+      top: 72px;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: var(--e-3);
+      padding: var(--e-5) var(--e-3);
+      background: var(--azul-escuro);
+      /* Escondido: deslocado para cima e invisível */
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        opacity var(--d-media) var(--e-suave),
+        transform var(--d-media) var(--e-saida);
+    }
+
+    .cabecalho__nav.aberto {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cabecalho__lista {
+      flex-direction: column;
+      gap: var(--e-2);
+      width: 100%;
+    }
+
+    .cabecalho__lista li {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cabecalho__link {
+      display: block;
+      font-size: 1.15rem;
+      padding: var(--e-2);
+      width: 100%;
+    }
+
+    .cabecalho__cta {
+      width: 100%;
+      max-width: 320px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .cabecalho__nome strong {
+      font-size: 0.9rem;
+    }
+  }
+</style>

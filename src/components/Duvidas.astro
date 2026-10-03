@@ -1,0 +1,152 @@
+---
+import { faq } from "../data/conteudo";
+
+/* Marcação que permite as perguntas aparecerem direto no resultado do Google */
+const faqEstruturado = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((item) => ({
+    "@type": "Question",
+    name: item.pergunta,
+    acceptedAnswer: { "@type": "Answer", text: item.resposta },
+  })),
+};
+---
+
+<section class="secao" id="duvidas">
+  <div class="container duvidas__interno">
+    <div class="duvidas__cabecalho revelar">
+      <span class="secao__rotulo">Dúvidas</span>
+      <h2 class="secao__titulo">Perguntas frequentes</h2>
+      <p class="secao__texto">
+        Se a sua pergunta não estiver aqui, chame no WhatsApp. Responde uma
+        pessoa de verdade.
+      </p>
+    </div>
+
+    <div class="duvidas__lista revelar revelar--1">
+      {
+        faq.map((item) => (
+          <details class="duvida">
+            <summary class="duvida__pergunta">
+              <span>{item.pergunta}</span>
+              <svg
+                class="duvida__seta"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 8l5 5 5-5" />
+              </svg>
+            </summary>
+            <div class="duvida__corpo">
+              <p>{item.resposta}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(faqEstruturado)}
+  />
+</section>
+
+<style>
+  .duvidas__interno {
+    max-width: 820px;
+  }
+
+  .duvidas__cabecalho {
+    margin-bottom: var(--e-4);
+  }
+
+  .duvidas__lista {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  /* <details> e <summary> são recursos nativos do HTML: abrem e fecham
+     sozinhos, funcionam pelo teclado e são lidos corretamente por leitores
+     de tela, sem precisar de JavaScript. */
+  .duvida {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-medio);
+    overflow: hidden;
+    transition: border-color var(--d-rapida) var(--e-suave);
+  }
+
+  .duvida[open] {
+    border-color: rgba(222, 178, 53, 0.35);
+  }
+
+  .duvida__pergunta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-2);
+    padding: var(--e-3);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    min-height: 56px;
+    transition: background-color var(--d-rapida) var(--e-suave);
+  }
+
+  /* Remove o triângulo padrão do navegador */
+  .duvida__pergunta::-webkit-details-marker {
+    display: none;
+  }
+
+  @media (hover: hover) {
+    .duvida__pergunta:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  .duvida__seta {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--destaque);
+    transition: transform var(--d-media) var(--e-suave);
+  }
+
+  .duvida[open] .duvida__seta {
+    transform: rotate(180deg);
+  }
+
+  .duvida__corpo {
+    padding: 0 var(--e-3) var(--e-3);
+    color: var(--texto-suave);
+  }
+
+  /* Animação de abertura: o conteúdo desliza para baixo */
+  .duvida[open] .duvida__corpo {
+    animation: abrir var(--d-media) var(--e-saida);
+  }
+
+  @keyframes abrir {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .duvida[open] .duvida__corpo {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,75 @@
+/* ============================================================
+   TOKENS — valores reutilizados em todo o site.
+   Mudar aqui muda em todas as páginas de uma vez.
+   ============================================================ */
+
+:root {
+  /* --- Cores da marca (tiradas da logo) --- */
+  --azul-escuro: #00081b;
+  --azul-marinho: #0a1a3a;
+  --dourado: #deb235;
+  --branco: #ffffff;
+  --azul-vivo: #0049af;
+
+  /* --- Tons de areia (vôlei de praia) --- */
+  --areia-clara: #f7f1e6;
+  --areia: #e8dcc6;
+
+  /* --- Cores por função (use estas no CSS, não as de cima) --- */
+  --fundo: var(--azul-escuro);
+  --fundo-secao: var(--azul-marinho);
+  --fundo-claro: var(--areia-clara);
+  --texto: var(--branco);
+  --texto-suave: #b9c2d4;
+  --texto-escuro: #0a1a3a;
+  --destaque: var(--dourado);
+  --borda: rgba(255, 255, 255, 0.12);
+
+  /* --- Tipografia --- */
+  --fonte-titulo: "Archivo", system-ui, -apple-system, sans-serif;
+  --fonte-texto: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Tamanhos que crescem com a tela, sem quebrar no celular */
+  --t-gigante: clamp(2.5rem, 7vw, 5rem);
+  --t-titulo: clamp(1.9rem, 4.5vw, 3rem);
+  --t-subtitulo: clamp(1.25rem, 2.5vw, 1.6rem);
+  --t-corpo: clamp(1rem, 1.6vw, 1.125rem);
+  --t-pequeno: 0.875rem;
+
+  /* --- Espaçamentos --- */
+  --e-1: 0.5rem;
+  --e-2: 1rem;
+  --e-3: 1.5rem;
+  --e-4: 2rem;
+  --e-5: 3rem;
+  --e-6: 4rem;
+  --e-secao: clamp(3.5rem, 9vw, 7rem);
+  --largura-max: 1140px;
+
+  /* --- Cantos arredondados --- */
+  --r-pequeno: 8px;
+  --r-medio: 14px;
+  --r-grande: 24px;
+  --r-pilula: 999px;
+
+  /* --- Sombras --- */
+  --sombra-1: 0 2px 8px rgba(0, 8, 27, 0.18);
+  --sombra-2: 0 10px 30px rgba(0, 8, 27, 0.3);
+  --sombra-destaque: 0 8px 28px rgba(222, 178, 53, 0.28);
+
+  /* ============================================================
+     MOVIMENTO — duração e aceleração das animações.
+     Padrão único para o site inteiro (regra 2.9 do CLAUDE.md).
+     ============================================================ */
+  --d-rapida: 150ms;   /* botões, links, hover */
+  --d-media: 280ms;    /* entrada de elementos */
+  --d-lenta: 500ms;    /* transições grandes */
+
+  /* Curvas de aceleração: dão naturalidade ao movimento */
+  --e-saida: cubic-bezier(0.16, 1, 0.3, 1);      /* desacelera no fim */
+  --e-suave: cubic-bezier(0.4, 0, 0.2, 1);        /* padrão equilibrado */
+  --e-elastica: cubic-bezier(0.34, 1.56, 0.64, 1); /* passa um pouco e volta */
+
+  --z-flutuante: 50;
+  --z-cabecalho: 40;
+}
