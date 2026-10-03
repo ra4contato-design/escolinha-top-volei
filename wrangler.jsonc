@@ -1,0 +1,12 @@
+{
+  // Configuração do deploy na Cloudflare.
+  // Diz à Cloudflare onde está o site já pronto (a pasta "dist", gerada por
+  // "npm run build"). Sem este arquivo, o comando "wrangler deploy" tenta se
+  // configurar sozinho e falha. Ver Issue #3.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "escolinha-top-volei",
+  "compatibility_date": "2026-10-03",
+  "assets": {
+    "directory": "./dist"
+  }
+}
