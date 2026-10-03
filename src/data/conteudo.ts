@@ -88,6 +88,21 @@ export const torneio = {
   taxa: "1 kg de aveia + 1 caixa de maizena",
   destinoDoacao: "Lar de idosos",
   formularioUrl: "https://forms.gle/Q8zxmkvtxU9rDDnR7",
+
+  /* --------------------------------------------------------------------------
+     VAGAS DO TORNEIO
+     Atualize "ocupadas" conforme as inscrições chegam. O site calcula
+     sozinho quantas sobraram e muda o aviso quando lotar.
+     -------------------------------------------------------------------------- */
+  vagas: {
+    // Mostrar ou esconder o painel de vagas no site
+    exibir: true,
+    totalPorGenero: 24,
+    categorias: [
+      { publico: "Meninas", dia: "17/10", ocupadas: 22 },
+      { publico: "Meninos", dia: "18/10", ocupadas: 0 },
+    ],
+  },
 };
 
 export const historia = {

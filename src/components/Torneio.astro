@@ -1,5 +1,24 @@
 ---
 import { torneio } from "../data/conteudo";
+
+/* Calcula as vagas restantes de cada categoria.
+   O total e as ocupadas vêm de src/data/conteudo.ts */
+const vagas = torneio.vagas.categorias.map((c) => {
+  const total = torneio.vagas.totalPorGenero;
+  const restantes = Math.max(0, total - c.ocupadas);
+  return {
+    ...c,
+    total,
+    restantes,
+    esgotado: restantes === 0,
+    // "Últimas vagas" quando sobram 3 ou menos
+    urgente: restantes > 0 && restantes <= 3,
+    // Quanto da barra preencher
+    percentual: Math.min(100, Math.round((c.ocupadas / total) * 100)),
+  };
+});
+
+const totalVagas = torneio.vagas.totalPorGenero * vagas.length;
 ---
 
 <section class="torneio secao" id="torneio">
@@ -81,6 +100,58 @@ import { torneio } from "../data/conteudo";
           A Copinha está acontecendo. Boa sorte a todos!
         </p>
       </div>
+
+      {
+        torneio.vagas.exibir && (
+          <div class="vagas">
+            <p class="vagas__titulo">
+              <strong>{totalVagas} vagas</strong> no total —
+              {torneio.vagas.totalPorGenero} por categoria
+            </p>
+
+            <ul class="vagas__lista">
+              {vagas.map((v) => (
+                <li
+                  class:list={[
+                    "vaga",
+                    v.urgente && "vaga--urgente",
+                    v.esgotado && "vaga--esgotado",
+                  ]}
+                >
+                  <div class="vaga__topo">
+                    <span class="vaga__publico">
+                      {v.publico} <small>{v.dia}</small>
+                    </span>
+                    <span class="vaga__contador">
+                      {v.esgotado ? (
+                        "Esgotado"
+                      ) : (
+                        <>
+                          <strong>{v.restantes}</strong>
+                          {v.restantes === 1 ? " vaga" : " vagas"}
+                        </>
+                      )}
+                    </span>
+                  </div>
+
+                  {/* Barra de ocupação. role="img" porque o valor já está
+                      escrito ao lado: evita o leitor de tela repetir. */}
+                  <div class="vaga__barra" role="img" aria-label={`${v.ocupadas} de ${v.total} vagas ocupadas`}>
+                    <span
+                      class="vaga__preenchimento"
+                      style={`--p:${v.percentual}%`}
+                    />
+                  </div>
+
+                  {v.urgente && (
+                    <p class="vaga__aviso">Últimas vagas</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
 
       <dl class="torneio__infos">
         <div class="torneio__info">
@@ -359,6 +430,127 @@ import { torneio } from "../data/conteudo";
     font-size: var(--t-subtitulo);
     font-weight: 700;
     color: var(--destaque);
+  }
+
+  /* ---------- Vagas ---------- */
+  .vagas {
+    margin-bottom: var(--e-4);
+  }
+
+  .vagas__titulo {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    margin-bottom: var(--e-2);
+  }
+
+  .vagas__titulo strong {
+    color: var(--texto);
+  }
+
+  .vagas__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--e-2);
+    list-style: none;
+  }
+
+  .vaga {
+    background: rgba(0, 8, 27, 0.5);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-medio);
+    padding: var(--e-2);
+  }
+
+  .vaga--urgente {
+    border-color: rgba(198, 40, 40, 0.65);
+    background: rgba(198, 40, 40, 0.1);
+  }
+
+  .vaga--esgotado {
+    opacity: 0.6;
+  }
+
+  .vaga__topo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .vaga__publico {
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .vaga__publico small {
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+    margin-left: 0.25rem;
+  }
+
+  .vaga__contador {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    white-space: nowrap;
+  }
+
+  .vaga__contador strong {
+    font-family: var(--fonte-titulo);
+    font-size: 1.3rem;
+    color: var(--destaque);
+    margin-right: 0.15rem;
+  }
+
+  .vaga--urgente .vaga__contador strong {
+    color: #ff6b6b;
+  }
+
+  .vaga__barra {
+    height: 6px;
+    border-radius: var(--r-pilula);
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .vaga__preenchimento {
+    display: block;
+    height: 100%;
+    width: var(--p);
+    border-radius: var(--r-pilula);
+    background: var(--destaque);
+    /* Cresce da esquerda ao carregar a página */
+    transform-origin: left;
+    animation: crescerBarra var(--d-lenta) var(--e-saida) both;
+  }
+
+  .vaga--urgente .vaga__preenchimento {
+    background: #ff6b6b;
+  }
+
+  @keyframes crescerBarra {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .vaga__aviso {
+    margin-top: 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff6b6b;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vaga__preenchimento {
+      animation: none;
+    }
   }
 
   /* ---------- Informações ---------- */

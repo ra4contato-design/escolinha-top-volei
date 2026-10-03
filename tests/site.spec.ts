@@ -138,3 +138,28 @@ test("não há rolagem horizontal no celular", async ({ page, isMobile }) => {
   );
   expect(estouro).toBe(false);
 });
+
+test("o painel de vagas mostra as duas categorias", async ({ page }) => {
+  const vagas = page.locator("#torneio .vagas");
+  await expect(vagas).toBeVisible();
+  await expect(vagas).toContainText("48 vagas");
+  await expect(vagas).toContainText("Meninas");
+  await expect(vagas).toContainText("Meninos");
+
+  // Uma linha por categoria
+  await expect(vagas.locator(".vaga")).toHaveCount(2);
+});
+
+test("a barra de vagas tem rótulo acessível", async ({ page }) => {
+  const barras = page.locator("#torneio .vaga__barra");
+  const total = await barras.count();
+  expect(total).toBe(2);
+
+  for (let i = 0; i < total; i++) {
+    // Quem usa leitor de tela precisa ouvir o número, não só ver a barra
+    await expect(barras.nth(i)).toHaveAttribute(
+      "aria-label",
+      /\d+ de \d+ vagas ocupadas/,
+    );
+  }
+});
