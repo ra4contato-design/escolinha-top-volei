@@ -1,0 +1,45 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+.env.local
+
+# macOS-specific files
+.DS_Store
+Thumbs.db
+
+# jetbrains setting folder
+.idea/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# ============================================================================
+# PROTEÇÃO DE IMAGEM DE CRIANÇAS  —  NÃO REMOVER
+# ----------------------------------------------------------------------------
+# Fotos de crianças sem autorização de uso de imagem assinada pelos
+# responsáveis NÃO podem ir para o repositório, que é público.
+#
+# Uma vez enviada ao Git, a imagem fica no histórico permanentemente, mesmo
+# que o arquivo seja apagado depois.
+#
+# Quando a autorização for assinada, mova a foto para
+# "assets-originais/fotos-liberadas/" — só essa pasta é versionada.
+# ============================================================================
+assets-originais/fotos-sem-autorizacao/

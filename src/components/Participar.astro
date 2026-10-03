@@ -1,0 +1,256 @@
+---
+import {
+  comoParticipar,
+  documentos,
+  aulas,
+  contato,
+  linkWhatsApp,
+} from "../data/conteudo";
+---
+
+<section class="secao secao--marinho" id="participar">
+  <div class="container">
+    <div class="participar__cabecalho revelar">
+      <span class="secao__rotulo">Participar</span>
+      <h2 class="secao__titulo">Como inscrever seu filho</h2>
+      <p class="secao__texto">
+        São quatro passos, e o primeiro leva menos de um minuto. Não há
+        mensalidade, taxa nem lista de espera.
+      </p>
+    </div>
+
+    <ol class="passos">
+      {
+        comoParticipar.map((passo, i) => (
+          <li class={`passo revelar revelar--${(i % 4) + 1}`}>
+            <span class="passo__numero" aria-hidden="true">
+              {passo.numero}
+            </span>
+            <div>
+              <h3 class="passo__titulo">{passo.titulo}</h3>
+              <p class="passo__texto">{passo.texto}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="participar__painel">
+      <div class="painel painel--horario revelar">
+        <h3 class="painel__titulo">Quando acontece</h3>
+        <p class="painel__grande">{aulas.dias}</p>
+        <p class="painel__hora">{aulas.horario}</p>
+        <p class="painel__nota">{aulas.observacaoHorario}</p>
+        <a
+          href={contato.grupoComunidade}
+          class="botao botao--secundario painel__botao"
+          target="_blank"
+          rel="noopener"
+        >
+          Entrar no grupo da comunidade
+        </a>
+      </div>
+
+      <div class="painel revelar revelar--1">
+        <h3 class="painel__titulo">Documentos necessários</h3>
+        <ul class="documentos">
+          {
+            documentos.map((doc) => (
+              <li class="documento">
+                <svg
+                  class="documento__icone"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 3h8l4 4v10H4z" />
+                  <path d="M12 3v4h4" />
+                </svg>
+                <div>
+                  <strong>{doc.nome}</strong>
+                  <span>{doc.descricao}</span>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="painel__nota">
+          A coordenação envia todos os documentos pelo WhatsApp depois do
+          primeiro contato.
+        </p>
+      </div>
+    </div>
+
+    <div class="participar__chamada revelar">
+      <p>Pronto para começar?</p>
+      <a
+        href={linkWhatsApp()}
+        class="botao botao--principal"
+        target="_blank"
+        rel="noopener"
+      >
+        Falar com a coordenação
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .participar__cabecalho {
+    max-width: 52ch;
+    margin-bottom: var(--e-5);
+  }
+
+  .passos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--e-3);
+    list-style: none;
+    margin-bottom: var(--e-5);
+    counter-reset: passo;
+  }
+
+  .passo {
+    display: flex;
+    gap: var(--e-2);
+    align-items: flex-start;
+    padding: var(--e-3);
+    background: rgba(0, 8, 27, 0.4);
+    border-radius: var(--r-medio);
+    border: 1px solid var(--borda);
+  }
+
+  .passo__numero {
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--destaque);
+    opacity: 0.55;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .passo__titulo {
+    font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .passo__texto {
+    font-size: 0.95rem;
+    color: var(--texto-suave);
+  }
+
+  .participar__painel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--e-3);
+    margin-bottom: var(--e-5);
+  }
+
+  .painel {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-grande);
+    padding: var(--e-4) var(--e-3);
+  }
+
+  .painel--horario {
+    background: radial-gradient(
+        circle at 100% 0%,
+        rgba(0, 73, 175, 0.28),
+        transparent 60%
+      ),
+      rgba(255, 255, 255, 0.04);
+  }
+
+  .painel__titulo {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin-bottom: var(--e-2);
+  }
+
+  .painel__grande {
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .painel__hora {
+    font-size: 2rem;
+    font-family: var(--fonte-titulo);
+    font-weight: 900;
+    color: var(--destaque);
+    line-height: 1.1;
+    margin-bottom: var(--e-2);
+  }
+
+  .painel__nota {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    margin-top: var(--e-2);
+  }
+
+  .painel__botao {
+    margin-top: var(--e-3);
+    width: 100%;
+  }
+
+  .documentos {
+    list-style: none;
+    display: grid;
+    gap: var(--e-2);
+  }
+
+  .documento {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .documento__icone {
+    width: 20px;
+    height: 20px;
+    color: var(--destaque);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .documento strong {
+    display: block;
+    font-size: 0.98rem;
+  }
+
+  .documento span {
+    display: block;
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+  }
+
+  .participar__chamada {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--e-3);
+    text-align: center;
+  }
+
+  .participar__chamada p {
+    font-family: var(--fonte-titulo);
+    font-size: var(--t-subtitulo);
+    font-weight: 700;
+  }
+
+  @media (max-width: 560px) {
+    .participar__chamada .botao {
+      width: 100%;
+    }
+  }
+</style>

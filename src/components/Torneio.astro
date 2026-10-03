@@ -1,0 +1,637 @@
+---
+import { torneio } from "../data/conteudo";
+
+/* Calcula as vagas restantes de cada categoria.
+   O total e as ocupadas vêm de src/data/conteudo.ts */
+const vagas = torneio.vagas.categorias.map((c) => {
+  const total = torneio.vagas.totalPorGenero;
+  const restantes = Math.max(0, total - c.ocupadas);
+  return {
+    ...c,
+    total,
+    restantes,
+    esgotado: restantes === 0,
+    // "Últimas vagas" quando sobram 3 ou menos
+    urgente: restantes > 0 && restantes <= 3,
+    // Quanto da barra preencher
+    percentual: Math.min(100, Math.round((c.ocupadas / total) * 100)),
+  };
+});
+
+const totalVagas = torneio.vagas.totalPorGenero * vagas.length;
+---
+
+<section class="torneio secao" id="torneio">
+  <div class="container">
+    <div class="torneio__cartao revelar">
+      <div class="torneio__topo">
+        <span class="torneio__selo">Evento</span>
+        <span class="torneio__solidario">Vôlei Solidário</span>
+      </div>
+
+      <h2 class="torneio__titulo">{torneio.nome}</h2>
+
+      <p class="torneio__motivo">{torneio.motivo}</p>
+
+      <p class="torneio__datas">
+        {torneio.datasExibicao}
+        <span class="torneio__dias">
+          {
+            torneio.detalheDias.map((d) => (
+              <span class="torneio__dia">
+                <strong>{d.dia}</strong> {d.publico}
+              </span>
+            ))
+          }
+        </span>
+      </p>
+
+      <!-- ====================================================================
+           CONTAGEM REGRESSIVA
+           Começa como "skeleton" (blocos cinzas pulsando). O JavaScript troca
+           pelos números reais. Assim não aparece "00" piscando antes da conta,
+           e o espaço já fica reservado: o layout não pula.
+           ==================================================================== -->
+      <div
+        class="contagem"
+        data-contagem
+        data-alvo={torneio.inicioISO}
+        aria-live="polite"
+      >
+        <div class="contagem__estado" data-contagem-carregando>
+          <div class="contagem__bloco">
+            <div class="skeleton contagem__skeleton"></div>
+            <span class="contagem__rotulo">dias</span>
+          </div>
+          <div class="contagem__bloco">
+            <div class="skeleton contagem__skeleton"></div>
+            <span class="contagem__rotulo">horas</span>
+          </div>
+          <div class="contagem__bloco">
+            <div class="skeleton contagem__skeleton"></div>
+            <span class="contagem__rotulo">min</span>
+          </div>
+          <div class="contagem__bloco">
+            <div class="skeleton contagem__skeleton"></div>
+            <span class="contagem__rotulo">seg</span>
+          </div>
+        </div>
+
+        <div class="contagem__estado contagem__estado--oculto" data-contagem-numeros>
+          <div class="contagem__bloco">
+            <strong class="contagem__numero" data-dias>--</strong>
+            <span class="contagem__rotulo">dias</span>
+          </div>
+          <div class="contagem__bloco">
+            <strong class="contagem__numero" data-horas>--</strong>
+            <span class="contagem__rotulo">horas</span>
+          </div>
+          <div class="contagem__bloco">
+            <strong class="contagem__numero" data-minutos>--</strong>
+            <span class="contagem__rotulo">min</span>
+          </div>
+          <div class="contagem__bloco">
+            <strong class="contagem__numero" data-segundos>--</strong>
+            <span class="contagem__rotulo">seg</span>
+          </div>
+        </div>
+
+        <p class="contagem__acabou contagem__estado--oculto" data-contagem-acabou>
+          A Copinha está acontecendo. Boa sorte a todos!
+        </p>
+      </div>
+
+      {
+        torneio.vagas.exibir && (
+          <div class="vagas">
+            <p class="vagas__titulo">
+              <strong>{totalVagas} vagas</strong> no total —
+              {torneio.vagas.totalPorGenero} por categoria
+            </p>
+
+            <ul class="vagas__lista">
+              {vagas.map((v) => (
+                <li
+                  class:list={[
+                    "vaga",
+                    v.urgente && "vaga--urgente",
+                    v.esgotado && "vaga--esgotado",
+                  ]}
+                >
+                  <div class="vaga__topo">
+                    <span class="vaga__publico">
+                      {v.publico} <small>{v.dia}</small>
+                    </span>
+                    <span class="vaga__contador">
+                      {v.esgotado ? (
+                        "Esgotado"
+                      ) : (
+                        <>
+                          <strong>{v.restantes}</strong>
+                          {v.restantes === 1 ? " vaga" : " vagas"}
+                        </>
+                      )}
+                    </span>
+                  </div>
+
+                  {/* Barra de ocupação. role="img" porque o valor já está
+                      escrito ao lado: evita o leitor de tela repetir. */}
+                  <div class="vaga__barra" role="img" aria-label={`${v.ocupadas} de ${v.total} vagas ocupadas`}>
+                    <span
+                      class="vaga__preenchimento"
+                      style={`--p:${v.percentual}%`}
+                    />
+                  </div>
+
+                  {v.urgente && (
+                    <p class="vaga__aviso">Últimas vagas</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      <dl class="torneio__infos">
+        <div class="torneio__info">
+          <dt>Inscrição</dt>
+          <dd>{torneio.taxa}</dd>
+        </div>
+        <div class="torneio__info">
+          <dt>As doações vão para</dt>
+          <dd>{torneio.destinoDoacao}</dd>
+        </div>
+        <div class="torneio__info torneio__info--prazo">
+          <dt>Inscrições até</dt>
+          <dd>
+            {torneio.inscricoesAteExibicao}
+            <span
+              class="torneio__urgencia"
+              data-prazo={torneio.inscricoesAteISO}
+              hidden></span>
+          </dd>
+        </div>
+      </dl>
+
+      <a
+        href={torneio.formularioUrl}
+        class="botao botao--principal torneio__botao"
+        target="_blank"
+        rel="noopener"
+      >
+        Fazer inscrição no torneio
+      </a>
+
+      <p class="torneio__nota">
+        A inscrição é um gesto: você leva {torneio.taxa.toLowerCase()}, e tudo é
+        entregue a um lar de idosos.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  /* ==========================================================================
+     Lógica da contagem regressiva.
+     ========================================================================== */
+  const raiz = document.querySelector<HTMLElement>("[data-contagem]");
+
+  if (raiz) {
+    const alvo = new Date(raiz.dataset.alvo ?? "").getTime();
+
+    const carregando = raiz.querySelector<HTMLElement>("[data-contagem-carregando]");
+    const numeros = raiz.querySelector<HTMLElement>("[data-contagem-numeros]");
+    const acabou = raiz.querySelector<HTMLElement>("[data-contagem-acabou]");
+
+    const campos = {
+      dias: raiz.querySelector<HTMLElement>("[data-dias]"),
+      horas: raiz.querySelector<HTMLElement>("[data-horas]"),
+      minutos: raiz.querySelector<HTMLElement>("[data-minutos]"),
+      segundos: raiz.querySelector<HTMLElement>("[data-segundos]"),
+    };
+
+    const OCULTO = "contagem__estado--oculto";
+    // Sempre dois dígitos: 7 vira "07"
+    const doisDigitos = (n: number): string => String(n).padStart(2, "0");
+
+    const mostrarEstado = (qual: "numeros" | "acabou"): void => {
+      carregando?.classList.add(OCULTO);
+      if (qual === "numeros") {
+        numeros?.classList.remove(OCULTO);
+        acabou?.classList.add(OCULTO);
+      } else {
+        numeros?.classList.add(OCULTO);
+        acabou?.classList.remove(OCULTO);
+      }
+    };
+
+    let intervalo: ReturnType<typeof setInterval> | undefined;
+
+    const atualizar = (): void => {
+      // Data inválida no arquivo de conteúdo: esconde em vez de mostrar erro
+      if (Number.isNaN(alvo)) {
+        raiz.style.display = "none";
+        if (intervalo) clearInterval(intervalo);
+        return;
+      }
+
+      const restante = alvo - Date.now();
+
+      if (restante <= 0) {
+        mostrarEstado("acabou");
+        if (intervalo) clearInterval(intervalo);
+        return;
+      }
+
+      const segundosTotais = Math.floor(restante / 1000);
+      const dias = Math.floor(segundosTotais / 86400);
+      const horas = Math.floor((segundosTotais % 86400) / 3600);
+      const minutos = Math.floor((segundosTotais % 3600) / 60);
+      const segundos = segundosTotais % 60;
+
+      if (campos.dias) campos.dias.textContent = String(dias);
+      if (campos.horas) campos.horas.textContent = doisDigitos(horas);
+      if (campos.minutos) campos.minutos.textContent = doisDigitos(minutos);
+      if (campos.segundos) campos.segundos.textContent = doisDigitos(segundos);
+
+      mostrarEstado("numeros");
+    };
+
+    atualizar();
+    intervalo = setInterval(atualizar, 1000);
+  }
+
+  /* ==========================================================================
+     Aviso de urgência no prazo de inscrição.
+     Mostra "encerram hoje", "amanhã" ou "em X dias" conforme a data real.
+     ========================================================================== */
+  const aviso = document.querySelector<HTMLElement>("[data-prazo]");
+
+  if (aviso) {
+    const prazo = new Date(aviso.dataset.prazo ?? "").getTime();
+
+    if (!Number.isNaN(prazo)) {
+      const restante = prazo - Date.now();
+      const dias = Math.ceil(restante / 86_400_000);
+
+      let texto = "";
+      if (restante <= 0) texto = "Inscrições encerradas";
+      else if (dias <= 1) texto = "Encerram hoje";
+      else if (dias === 2) texto = "Encerram amanhã";
+      else if (dias <= 7) texto = `Faltam ${dias} dias`;
+
+      if (texto) {
+        aviso.textContent = texto;
+        aviso.hidden = false;
+        if (restante <= 0) aviso.classList.add("torneio__urgencia--fim");
+      }
+    }
+  }
+</script>
+
+<style>
+  .torneio {
+    padding-block: var(--e-5);
+  }
+
+  .torneio__cartao {
+    position: relative;
+    border: 1px solid rgba(222, 178, 53, 0.35);
+    border-radius: var(--r-grande);
+    background:
+      radial-gradient(
+        circle at 15% 0%,
+        rgba(222, 178, 53, 0.14),
+        transparent 55%
+      ),
+      var(--azul-marinho);
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: var(--sombra-2);
+    overflow: hidden;
+  }
+
+  .torneio__topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e-2);
+    margin-bottom: var(--e-2);
+  }
+
+  .torneio__selo {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--texto-escuro);
+    background: var(--destaque);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--r-pilula);
+  }
+
+  .torneio__solidario {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+  }
+
+  .torneio__titulo {
+    font-size: var(--t-titulo);
+    margin-bottom: 0.4rem;
+  }
+
+  .torneio__motivo {
+    font-size: 1rem;
+    color: var(--texto-suave);
+    font-style: italic;
+    margin-bottom: var(--e-3);
+  }
+
+  .torneio__datas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--e-2);
+    font-size: var(--t-subtitulo);
+    color: var(--destaque);
+    font-weight: 700;
+    margin-bottom: var(--e-4);
+  }
+
+  .torneio__dias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .torneio__dia {
+    font-size: var(--t-pequeno);
+    font-weight: 500;
+    color: var(--texto-suave);
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: var(--r-pilula);
+    padding: 0.25rem 0.75rem;
+  }
+
+  .torneio__dia strong {
+    color: var(--texto);
+  }
+
+  /* ---------- Contagem ---------- */
+  .contagem {
+    margin-bottom: var(--e-4);
+  }
+
+  .contagem__estado {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 110px));
+    gap: var(--e-2);
+  }
+
+  .contagem__estado--oculto {
+    display: none;
+  }
+
+  .contagem__bloco {
+    background: rgba(0, 8, 27, 0.55);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-medio);
+    padding: var(--e-2) 0.5rem;
+    text-align: center;
+  }
+
+  .contagem__numero {
+    display: block;
+    font-family: var(--fonte-titulo);
+    font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--branco);
+    /* Números de largura fixa: evita o texto "tremer" a cada segundo */
+    font-variant-numeric: tabular-nums;
+  }
+
+  .contagem__skeleton {
+    height: clamp(1.6rem, 4.5vw, 2.4rem);
+    width: 70%;
+    margin: 0 auto;
+  }
+
+  .contagem__rotulo {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+  }
+
+  .contagem__acabou {
+    font-size: var(--t-subtitulo);
+    font-weight: 700;
+    color: var(--destaque);
+  }
+
+  /* ---------- Vagas ---------- */
+  .vagas {
+    margin-bottom: var(--e-4);
+  }
+
+  .vagas__titulo {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    margin-bottom: var(--e-2);
+  }
+
+  .vagas__titulo strong {
+    color: var(--texto);
+  }
+
+  .vagas__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--e-2);
+    list-style: none;
+  }
+
+  .vaga {
+    background: rgba(0, 8, 27, 0.5);
+    border: 1px solid var(--borda);
+    border-radius: var(--r-medio);
+    padding: var(--e-2);
+  }
+
+  .vaga--urgente {
+    border-color: rgba(198, 40, 40, 0.65);
+    background: rgba(198, 40, 40, 0.1);
+  }
+
+  .vaga--esgotado {
+    opacity: 0.6;
+  }
+
+  .vaga__topo {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .vaga__publico {
+    font-weight: 700;
+    font-size: 0.98rem;
+  }
+
+  .vaga__publico small {
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--texto-suave);
+    margin-left: 0.25rem;
+  }
+
+  .vaga__contador {
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    white-space: nowrap;
+  }
+
+  .vaga__contador strong {
+    font-family: var(--fonte-titulo);
+    font-size: 1.3rem;
+    color: var(--destaque);
+    margin-right: 0.15rem;
+  }
+
+  .vaga--urgente .vaga__contador strong {
+    color: #ff6b6b;
+  }
+
+  .vaga__barra {
+    height: 6px;
+    border-radius: var(--r-pilula);
+    background: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .vaga__preenchimento {
+    display: block;
+    height: 100%;
+    width: var(--p);
+    border-radius: var(--r-pilula);
+    background: var(--destaque);
+    /* Cresce da esquerda ao carregar a página */
+    transform-origin: left;
+    animation: crescerBarra var(--d-lenta) var(--e-saida) both;
+  }
+
+  .vaga--urgente .vaga__preenchimento {
+    background: #ff6b6b;
+  }
+
+  @keyframes crescerBarra {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .vaga__aviso {
+    margin-top: 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ff6b6b;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vaga__preenchimento {
+      animation: none;
+    }
+  }
+
+  /* ---------- Informações ---------- */
+  .torneio__infos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: var(--e-3);
+    padding-block: var(--e-3);
+    border-top: 1px solid var(--borda);
+    border-bottom: 1px solid var(--borda);
+    margin-bottom: var(--e-4);
+  }
+
+  .torneio__info dt {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin-bottom: 0.3rem;
+  }
+
+  .torneio__info dd {
+    font-weight: 700;
+    color: var(--texto);
+  }
+
+  .torneio__info--prazo dd {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .torneio__urgencia {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: #c62828;
+    color: var(--branco);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--r-pilula);
+    animation: pulsarAviso 2s ease-in-out infinite;
+  }
+
+  .torneio__urgencia--fim {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--texto-suave);
+    animation: none;
+  }
+
+  @keyframes pulsarAviso {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .torneio__urgencia {
+      animation: none;
+    }
+  }
+
+  .torneio__nota {
+    margin-top: var(--e-2);
+    font-size: var(--t-pequeno);
+    color: var(--texto-suave);
+    max-width: 52ch;
+  }
+
+  @media (max-width: 560px) {
+    .contagem__estado {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+    }
+
+    .contagem__bloco {
+      padding: 0.6rem 0.25rem;
+    }
+
+    .torneio__botao {
+      width: 100%;
+    }
+  }
+</style>
